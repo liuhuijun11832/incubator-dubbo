@@ -16,19 +16,23 @@
  */
 package org.apache.dubbo.qos.protocol;
 
-import org.apache.dubbo.common.Constants;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.qos.command.BaseCommand;
 import org.apache.dubbo.qos.server.Server;
 import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.Protocol;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import static org.apache.dubbo.common.constants.ConfigConstants.ACCEPT_FOREIGN_IP;
+import static org.apache.dubbo.common.constants.ConfigConstants.QOS_ENABLE;
+import static org.apache.dubbo.common.constants.ConfigConstants.QOS_PORT;
+import static org.apache.dubbo.common.constants.RegistryConstants.REGISTRY_PROTOCOL;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,16 +44,16 @@ public class QosProtocolWrapperTest {
     private QosProtocolWrapper wrapper = new QosProtocolWrapper(protocol);
     private Server server = Server.getInstance();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
-        when(url.getParameter(Constants.QOS_ENABLE, true)).thenReturn(true);
-        when(url.getParameter(Constants.QOS_PORT, 22222)).thenReturn(12345);
-        when(url.getParameter(Constants.ACCEPT_FOREIGN_IP, true)).thenReturn(false);
+        when(url.getParameter(QOS_ENABLE, true)).thenReturn(true);
+        when(url.getParameter(QOS_PORT, 22222)).thenReturn(12345);
+        when(url.getParameter(ACCEPT_FOREIGN_IP, true)).thenReturn(false);
         when(invoker.getUrl()).thenReturn(url);
-        when(url.getProtocol()).thenReturn(Constants.REGISTRY_PROTOCOL);
+        when(url.getProtocol()).thenReturn(REGISTRY_PROTOCOL);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (server.isStarted()) {
             server.stop();
